@@ -28,8 +28,6 @@ jobs:
             - -exc
             - |
                 cd concourse-app
-                make deps
-                make test
 
         inputs:
         - name: concourse-app
