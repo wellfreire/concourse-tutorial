@@ -62,3 +62,41 @@ jobs:
         path: app-pr
         context: php-tests
         status: pending
+
+  - task: unit test
+    config:
+        platform: linux
+
+        image_resource:
+            type: docker-image
+            source: {repository: golang, tag: "1"}
+
+        run:
+            path: sh
+            args:
+            - -exc
+            - |
+                cd concourse-app
+                APP_DIR=${GOPATH}/src/github.com/italolelis/concourse-tutorial
+
+                mkdir -p ${APP_DIR}
+                cp -r . ${APP_DIR}
+                cd ${APP_DIR}
+
+                make deps
+                make test
+
+        inputs:
+        - name: concourse-app
+    on_failure:
+        put: app-pr
+        params:
+            path: app-pr
+            context: php-tests
+            status: failure
+    on_success:
+        put: app-pr
+        params:
+            path: app-pr
+            context: php-tests
+            status: success
