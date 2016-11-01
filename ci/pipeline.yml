@@ -1,0 +1,15 @@
+---
+
+resources:
+- name: concourse-app
+  type: git
+  source:
+    uri: https://github.com/italolelis/concourse-tutorial
+
+jobs:
+- name: unit-test
+  public: true
+  serial: true
+  plan:
+  - get: concourse-app
+    trigger: true
