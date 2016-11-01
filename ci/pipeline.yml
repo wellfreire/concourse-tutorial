@@ -1,12 +1,24 @@
 ---
 
+resource_types    :
+- name          : pull-request
+  type          : docker-image
+  source        :
+    repository  : jtarchie/pr
+
 resources:
 - name: concourse-app
   type: git
   source:
     uri: https://github.com/wellfreire/concourse-tutorial
+- name          : app-pr
+  type          : pull-request
+  source        :
+    uri         : https://github.com/wellfreire/concourse-tutorial
+    repo        : wellfreire/concourse-tutorial
 
 jobs:
+
 - name: unit-test
   public: true
   serial: true
@@ -33,3 +45,14 @@ jobs:
 
         inputs:
         - name: concourse-app
+
+- name: app-pr
+  plan:
+  - get: app-pr
+    trigger: true
+
+  - put: app-pr
+    params:
+        path: app-pr
+        context: php-tests
+        status: pending
