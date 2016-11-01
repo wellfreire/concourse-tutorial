@@ -52,7 +52,7 @@ jobs:
         inputs:
         - name: concourse-app
 
-- name: app-pr
+- name: pull-request
   plan:
   - get: app-pr
     trigger: true
@@ -76,7 +76,7 @@ jobs:
             args:
             - -exc
             - |
-                cd concourse-app
+                cd app-pr
                 APP_DIR=${GOPATH}/src/github.com/italolelis/concourse-tutorial
 
                 mkdir -p ${APP_DIR}
@@ -87,7 +87,7 @@ jobs:
                 make test
 
         inputs:
-        - name: concourse-app
+        - name: app-pr
     on_failure:
         put: app-pr
         params:
