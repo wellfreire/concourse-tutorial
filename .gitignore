@@ -27,3 +27,5 @@ gin-bin
 /out
 /vendor
 .glide
+
+ci/vars_enc.yml
