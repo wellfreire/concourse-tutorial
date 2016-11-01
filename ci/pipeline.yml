@@ -41,7 +41,7 @@ jobs:
             - -exc
             - |
                 cd concourse-app
-                APP_DIR=${GOPATH}/src/github.com/italolelis/concourse-tutorial
+                APP_DIR=${GOPATH}/src/github.com/wellfreire/concourse-tutorial
 
                 mkdir -p ${APP_DIR}
                 cp -r . ${APP_DIR}
@@ -78,7 +78,7 @@ jobs:
             - -exc
             - |
                 cd app-pr
-                APP_DIR=${GOPATH}/src/github.com/italolelis/concourse-tutorial
+                APP_DIR=${GOPATH}/src/github.com/wellfreire/concourse-tutorial
 
                 mkdir -p ${APP_DIR}
                 cp -r . ${APP_DIR}
