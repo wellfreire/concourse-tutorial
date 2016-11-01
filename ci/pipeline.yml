@@ -11,11 +11,12 @@ resources:
   type: git
   source:
     uri: https://github.com/wellfreire/concourse-tutorial
-- name          : app-pr
-  type          : pull-request
-  source        :
-    uri         : https://github.com/wellfreire/concourse-tutorial
-    repo        : wellfreire/concourse-tutorial
+- name            : app-pr
+  type            : pull-request
+  source          :
+    uri           : https://github.com/wellfreire/concourse-tutorial
+    access_token  : {{oauth_token}}
+    repo          : wellfreire/concourse-tutorial
 
 jobs:
 
@@ -40,13 +41,19 @@ jobs:
             - -exc
             - |
                 cd concourse-app
+                APP_DIR=${GOPATH}/src/github.com/italolelis/concourse-tutorial
+
+                mkdir -p ${APP_DIR}
+                cp -r . ${APP_DIR}
+                cd ${APP_DIR}
+
                 make deps
                 make test
 
         inputs:
         - name: concourse-app
 
-- name: app-pr
+- name: pull-request
   plan:
   - get: app-pr
     trigger: true
@@ -56,3 +63,41 @@ jobs:
         path: app-pr
         context: php-tests
         status: pending
+
+  - task: unit test
+    config:
+        platform: linux
+
+        image_resource:
+            type: docker-image
+            source: {repository: golang, tag: "1"}
+
+        run:
+            path: sh
+            args:
+            - -exc
+            - |
+                cd app-pr
+                APP_DIR=${GOPATH}/src/github.com/italolelis/concourse-tutorial
+
+                mkdir -p ${APP_DIR}
+                cp -r . ${APP_DIR}
+                cd ${APP_DIR}
+
+                make deps
+                make test
+
+        inputs:
+        - name: app-pr
+    on_failure:
+        put: app-pr
+        params:
+            path: app-pr
+            context: php-tests
+            status: failure
+    on_success:
+        put: app-pr
+        params:
+            path: app-pr
+            context: php-tests
+            status: success
