@@ -11,11 +11,12 @@ resources:
   type: git
   source:
     uri: https://github.com/wellfreire/concourse-tutorial
-- name          : app-pr
-  type          : pull-request
-  source        :
-    uri         : https://github.com/wellfreire/concourse-tutorial
-    repo        : wellfreire/concourse-tutorial
+- name            : app-pr
+  type            : pull-request
+  source          :
+    uri           : https://github.com/wellfreire/concourse-tutorial
+    access_token  : {{oauth_token}}
+    repo          : wellfreire/concourse-tutorial
 
 jobs:
 
